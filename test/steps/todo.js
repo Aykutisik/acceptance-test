@@ -1,5 +1,5 @@
 const { When, Then, Given, Before, After } = require("cucumber");
-const { expect } = require('chai')
+const { expect, assert } = require('chai')
 const { By } = require("selenium-webdriver")
 const webdriver = require('selenium-webdriver');
 // const { findAsync } = require('./asyncUtil');
@@ -31,9 +31,10 @@ Given('Empty ToDo list', async function() {
 
 
     // driver.findElements(By.tagName('button')).click();
-    let todoItems = await driver.findElement(By.className('background-todoElement'));
+    let todoItems = await driver.findElement(By.className('list-background'));
 
-    return expect(todoItems).to.be.null
+    await expect(todoItems).to.be.not.null
+
 
 
     //let text = driver.findElement(By.id('list-background')).getText()
@@ -43,12 +44,17 @@ Given('Empty ToDo list', async function() {
     // expect(driver.findElement(By.xpath("//*[@class='background-todoElement']"))).toBe(false);
 });
 
-When('I write {string} to text box and click to add button', function(string) {
+When('I write {string} to text box and click to add button', async function(text) {
+    let addbtn = await driver.findElement(By.id('buttonAdd'));
+    await driver.findElement(By.id('inputPlace')).sendKeys(text);
+    return addbtn.click()
+
 
 });
 
-Then('I should see {string} item in ToDo list', function(string) {
-
+Then('I should see {string} item in ToDo list', async function(text) {
+    let textarea = await driver.findElement(By.id('line-through-false')).getText();
+    return assert.equal(text, textarea);
 });
 
 // Given('ToDo list with {string} item', function(string) {
