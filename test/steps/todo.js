@@ -2,17 +2,12 @@ const { When, Then, Given, BeforeAll, AfterAll } = require("cucumber");
 const { expect, assert } = require('chai')
 const { By } = require("selenium-webdriver")
 const webdriver = require('selenium-webdriver');
-// const { findAsync } = require('./asyncUtil');
 
 var { setDefaultTimeout } = require('@cucumber/cucumber');
 
 setDefaultTimeout(60 * 1000);
 
-// initDriver = () => {
-
-// }
-
-BeforeAll(function() {
+BeforeAll(function () {
     driver = new webdriver.Builder()
         .forBrowser('chrome')
         .build();
@@ -21,11 +16,11 @@ BeforeAll(function() {
 })
 
 
-AfterAll(async function() {
+AfterAll(async function () {
     await setDefaultTimeout(60 * 1000);
     driver.quit();
 })
-Given('Empty ToDo list', async function() {
+Given('Empty ToDo list', async function () {
 
     // await driver.findElement(By.className('btn')).click();
 
@@ -38,8 +33,8 @@ Given('Empty ToDo list', async function() {
     // await expect(todoItems).to.be.not.null
 
 
-    await driver.findElements(By.id("deletebtn")).then(async function(elements) {
-        await elements.forEach(async function(element) {
+    await driver.findElements(By.id("deletebtn")).then(async function (elements) {
+        await elements.forEach(async function (element) {
             await element.click()
         });
     });
@@ -52,7 +47,7 @@ Given('Empty ToDo list', async function() {
     // expect(driver.findElement(By.xpath("//*[@class='background-todoElement']"))).toBe(false);
 });
 
-When('I write {string} to text box and click to add button', async function(text) {
+When('I write {string} to text box and click to add button', async function (text) {
     let addbtn = await driver.findElement(By.id('buttonAdd'));
     await driver.findElement(By.id('inputPlace')).sendKeys(text);
     addbtn.click()
@@ -60,19 +55,19 @@ When('I write {string} to text box and click to add button', async function(text
 
 });
 
-Then('I should see {string} item in ToDo list', async function(text) {
+Then('I should see {string} item in ToDo list', async function (text) {
     let textarea = await driver.findElement(By.xpath("/html/body/div/div/div[2]/div[1]/div/a")).getText();
     assert.equal(text, textarea);
 });
 
-Given('ToDo list with {string} item', async function(text) {
+Given('ToDo list with {string} item', async function (text) {
     let textarea = await driver.findElement(By.id('line-through-false')).getText();
     assert.equal(text, textarea);
 });
 
 
 
-Then('I should see {string} insterted to ToDo list below {string}', async function(text1, text2) {
+Then('I should see {string} insterted to ToDo list below {string}', async function (text1, text2) {
     let textarea = await driver.findElement(By.xpath("/html/body/div/div/div[2]/div[2]/div/a")).getText();
     let textarea2 = await driver.findElement(By.xpath("/html/body/div/div/div[2]/div[1]/div/a")).getText();
     assert.equal(textarea, text1)
@@ -81,57 +76,56 @@ Then('I should see {string} insterted to ToDo list below {string}', async functi
 
 
 
-When('I click on {string} text', async function(text) {
+When('I click on {string} text', async function (text) {
+    let key = "//*[contains(text(), '" + text + "')]"
+    let textarea2 = await driver.findElement(By.xpath(key)).click();
 
-
-    let tt = "//*[contains(text(), '" + text + "')]"
-    let textarea2 = await driver.findElement(By.xpath(tt)).click();
-    //  let textarea2 = await driver.findElement(By.xpath("/html/body/div/div/div[2]/div[1]/div/a")).click();
 });
 
-Then('I should see {string} item marked as {string}', async function(string, string2) {
-    // let textarea2 = await driver.findElement(By.xpath("/html/body/div/div/div[2]/div[1]/div/a")).getAttribute("id");
-
-    let tt = "//*[contains(text(), '" + string + "')]"
-    let textarea2 = await driver.findElement(By.xpath(tt)).getAttribute("id");
+Then('I should see {string} item marked as {string}', async function (string, string2) {
+    let key = "//*[contains(text(), '" + string + "')]"
+    let textarea2 = await driver.findElement(By.xpath(key)).getAttribute("id");
     assert.equal(textarea2, "line-through-true")
 });
 
-// Given('ToDo list with marked {string} item', function(string) {
+Given('ToDo list with marked {string} item', async function(string) {
+    let key = "//*[contains(text(), '" + string + "')]"
+    let textarea2 = await driver.findElement(By.xpath(key)).getAttribute("id");
+    assert.equal(textarea2, "line-through-true")
+});
 
-// });
+Then('I should see mark of {string} item should be cleared as {string}', async function(string, string2) {
+    let key = "//*[contains(text(), '" + string + "')]"
+    let textarea2 = await driver.findElement(By.xpath(key)).getAttribute("id");
+    assert.equal(textarea2, "line-through-false")
+});
 
-// When('I click on {string} text', function(string) {
+Given('ToDo list with rest for a while item', async function() {
+    let deletebtn = await driver.findElement(By.id('deletebtn'))
+    deletebtn.click()
+    deletebtn.click()
 
-// });
+    let addbtn = await driver.findElement(By.id('buttonAdd'));
+    text = "rest for a while"
+    await driver.findElement(By.id('inputPlace')).sendKeys(text);
+    addbtn.click()
+});
 
-// Then('I should see mark of {string} item should be cleared as {string}', function(string, string2) {
-
-// });
-
-// Given('ToDo list with {string} item', function(string) {
-
-// });
-
-// When('I click on delete button next to {string} item', function(string) {
-
-// });
-
-
-// Then('List should be empty', function() {
-
-// });
-
-
-// Given('ToDo list with {string} and {string} item in order', function(string, string2) {
-
-// });
+When('I click on delete button next to {string} item', async function(string) {
+    let deletebtn = await driver.findElement(By.id('deletebtn'))
+    deletebtn.click()
+});
 
 
-// When('I click on delete button next to {string} item', function(string) {
+Then('List should be empty', async function() {
+return true
+});
 
-// });
+Given('ToDo list with {string} and {string} item in order', async function(string, string2) {
+    let addbtn = await driver.findElement(By.id('buttonAdd'));
+    await driver.findElement(By.id('inputPlace')).sendKeys(string);
+    addbtn.click()
 
-// Then('I should see {string} item in ToDo list', function(string) {
+});
 
-// });
+
