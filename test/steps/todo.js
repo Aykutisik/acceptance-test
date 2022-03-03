@@ -55,19 +55,19 @@ Given('Empty ToDo list', async function() {
 When('I write {string} to text box and click to add button', async function(text) {
     let addbtn = await driver.findElement(By.id('buttonAdd'));
     await driver.findElement(By.id('inputPlace')).sendKeys(text);
-    return addbtn.click()
+    addbtn.click()
 
 
 });
 
 Then('I should see {string} item in ToDo list', async function(text) {
     let textarea = await driver.findElement(By.xpath("/html/body/div/div/div[2]/div[1]/div/a")).getText();
-    return assert.equal(text, textarea);
+    assert.equal(text, textarea);
 });
 
 Given('ToDo list with {string} item', async function(text) {
     let textarea = await driver.findElement(By.id('line-through-false')).getText();
-    return assert.equal(text, textarea);
+    assert.equal(text, textarea);
 });
 
 
@@ -76,20 +76,26 @@ Then('I should see {string} insterted to ToDo list below {string}', async functi
     let textarea = await driver.findElement(By.xpath("/html/body/div/div/div[2]/div[2]/div/a")).getText();
     let textarea2 = await driver.findElement(By.xpath("/html/body/div/div/div[2]/div[1]/div/a")).getText();
     assert.equal(textarea, text1)
-    return assert.equal(textarea2, text2);
+    assert.equal(textarea2, text2);
 });
 
-// Given('ToDo list with {string} item', function(string) {
 
-// });
 
-// When('I click on {string} text', function(string) {
+When('I click on {string} text', async function(text) {
 
-// });
 
-// Then('I should see {string} item marked as {string}', function(string, string2) {
+    let tt = "//*[contains(text(), '" + text + "')]"
+    let textarea2 = await driver.findElement(By.xpath(tt)).click();
+    //  let textarea2 = await driver.findElement(By.xpath("/html/body/div/div/div[2]/div[1]/div/a")).click();
+});
 
-// });
+Then('I should see {string} item marked as {string}', async function(string, string2) {
+    // let textarea2 = await driver.findElement(By.xpath("/html/body/div/div/div[2]/div[1]/div/a")).getAttribute("id");
+
+    let tt = "//*[contains(text(), '" + string + "')]"
+    let textarea2 = await driver.findElement(By.xpath(tt)).getAttribute("id");
+    assert.equal(textarea2, "line-through-true")
+});
 
 // Given('ToDo list with marked {string} item', function(string) {
 
