@@ -1,12 +1,12 @@
 const { When, Then, Given, Before, After } = require("cucumber");
-const { expect, empty } = require('chai')
+const { expect } = require('chai')
 const { By } = require("selenium-webdriver")
 const webdriver = require('selenium-webdriver');
-
+// const { findAsync } = require('./asyncUtil');
 
 var { setDefaultTimeout } = require('@cucumber/cucumber');
 
-setDefaultTimeout(6 * 1000);
+setDefaultTimeout(60 * 1000);
 
 // initDriver = () => {
 
@@ -17,21 +17,27 @@ Before(function() {
         .forBrowser('chrome')
         .build();
     driver.get('http://localhost:8080/')
-    setDefaultTimeout(6 * 1000);
+
 })
 
 
-After(function() {
+After(async function() {
+    await setDefaultTimeout(60 * 1000);
     driver.quit();
 })
 Given('Empty ToDo list', async function() {
 
+    // await driver.findElement(By.className('btn')).click();
 
-    let vegetable = await driver.findElement(By.className('list-background'));
-    vegetable.clickElement();
-    expect(vegetable).to.not.be.null
-        //let text = driver.findElement(By.id('list-background')).getText()
-    console.log(vegetable);
+
+    // driver.findElements(By.tagName('button')).click();
+    let todoItems = await driver.findElement(By.className('background-todoElement'));
+
+    return expect(todoItems).to.be.null
+
+
+    //let text = driver.findElement(By.id('list-background')).getText()
+
 
     // expect(driver.find_element_by_xpath("//form[input/@name ='search']")).length(8)
     // expect(driver.findElement(By.xpath("//*[@class='background-todoElement']"))).toBe(false);
