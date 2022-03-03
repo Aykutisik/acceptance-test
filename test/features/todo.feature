@@ -6,10 +6,10 @@ Feature: Todofeature try
         When I write "buy some milk" to text box and click to add button
         Then I should see "buy some milk" item in ToDo list
 
-    # Scenario: Adding an item into non-empty todo list
-    #     Given ToDo list with "buy some milk" item
-    #     When I write "enjoy the assignment" to text box and click to add button
-    #     Then I should see "enjoy the assignment" insterted to ToDo list below "buy some milk"
+    Scenario: Adding an item into non-empty todo list
+        Given ToDo list with "buy some milk" item
+        When I write "enjoy the assignment" to text box and click to add button
+        Then I should see "enjoy the assignment" insterted to ToDo list below "buy some milk"
 
     # Scenario: Checking an item in todo list
     #     Given ToDo list with "buy some milk" item

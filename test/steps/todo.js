@@ -1,4 +1,4 @@
-const { When, Then, Given, Before, After } = require("cucumber");
+const { When, Then, Given, BeforeAll, AfterAll } = require("cucumber");
 const { expect, assert } = require('chai')
 const { By } = require("selenium-webdriver")
 const webdriver = require('selenium-webdriver');
@@ -12,7 +12,7 @@ setDefaultTimeout(60 * 1000);
 
 // }
 
-Before(function() {
+BeforeAll(function() {
     driver = new webdriver.Builder()
         .forBrowser('chrome')
         .build();
@@ -21,7 +21,7 @@ Before(function() {
 })
 
 
-After(async function() {
+AfterAll(async function() {
     await setDefaultTimeout(60 * 1000);
     driver.quit();
 })
@@ -31,10 +31,18 @@ Given('Empty ToDo list', async function() {
 
 
     // driver.findElements(By.tagName('button')).click();
-    let todoItems = await driver.findElement(By.className('list-background'));
 
-    await expect(todoItems).to.be.not.null
 
+    // let todoItems = await driver.findElement(By.className('list-background'));
+
+    // await expect(todoItems).to.be.not.null
+
+
+    await driver.findElements(By.id("deletebtn")).then(async function(elements) {
+        await elements.forEach(async function(element) {
+            await element.click()
+        });
+    });
 
 
     //let text = driver.findElement(By.id('list-background')).getText()
@@ -53,21 +61,23 @@ When('I write {string} to text box and click to add button', async function(text
 });
 
 Then('I should see {string} item in ToDo list', async function(text) {
+    let textarea = await driver.findElement(By.xpath("/html/body/div/div/div[2]/div[1]/div/a")).getText();
+    return assert.equal(text, textarea);
+});
+
+Given('ToDo list with {string} item', async function(text) {
     let textarea = await driver.findElement(By.id('line-through-false')).getText();
     return assert.equal(text, textarea);
 });
 
-// Given('ToDo list with {string} item', function(string) {
 
-// });
 
-// When('I write {string} to text box and click to add button', function(string) {
-
-// });
-
-// Then('I should see {string} insterted to ToDo list below {string}', function(string, string2) {
-
-// });
+Then('I should see {string} insterted to ToDo list below {string}', async function(text1, text2) {
+    let textarea = await driver.findElement(By.xpath("/html/body/div/div/div[2]/div[2]/div/a")).getText();
+    let textarea2 = await driver.findElement(By.xpath("/html/body/div/div/div[2]/div[1]/div/a")).getText();
+    assert.equal(textarea, text1)
+    return assert.equal(textarea2, text2);
+});
 
 // Given('ToDo list with {string} item', function(string) {
 
