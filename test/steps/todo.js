@@ -1,23 +1,34 @@
-const { When, Then, Given, Before } = require("cucumber");
-var chai = require('chai')
+const { When, Then, Given, Before, After } = require("cucumber");
+const { expect, empty } = require('chai')
+const { By } = require("selenium-webdriver")
 const webdriver = require('selenium-webdriver');
 
-initDriver = () => {
+
+var { setDefaultTimeout } = require('@cucumber/cucumber');
+
+setDefaultTimeout(6 * 1000);
+
+// initDriver = () => {
+
+// }
+
+Before(function() {
     driver = new webdriver.Builder()
         .forBrowser('chrome')
         .build();
-    return driver;
-}
+    driver.get('http://localhost:8080/')
+    setDefaultTimeout(6 * 1000);
+})
 
-   Before(function() {
-        driver = initDriver()
-    })
 
+After(function() {
+    driver.quit();
+})
 Given('Empty ToDo list', async function() {
 
-    await driver.get('http://192.168.1.101:8080/')
-  
-    await expect(driver.element.all(by.xpath("//*[@class='background-todoElement']")).isPresent()).toBe(false);
+
+    expect(driver.find_element_by_xpath("//form[input/@name ='search']")).length(8)
+        // expect(driver.findElement(By.xpath("//*[@class='background-todoElement']"))).toBe(false);
 });
 
 When('I write {string} to text box and click to add button', function(string) {
