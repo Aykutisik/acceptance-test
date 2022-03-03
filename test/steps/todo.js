@@ -27,8 +27,14 @@ After(function() {
 Given('Empty ToDo list', async function() {
 
 
-    expect(driver.find_element_by_xpath("//form[input/@name ='search']")).length(8)
-        // expect(driver.findElement(By.xpath("//*[@class='background-todoElement']"))).toBe(false);
+    let vegetable = await driver.findElement(By.className('list-background'));
+    vegetable.clickElement();
+    expect(vegetable).to.not.be.null
+        //let text = driver.findElement(By.id('list-background')).getText()
+    console.log(vegetable);
+
+    // expect(driver.find_element_by_xpath("//form[input/@name ='search']")).length(8)
+    // expect(driver.findElement(By.xpath("//*[@class='background-todoElement']"))).toBe(false);
 });
 
 When('I write {string} to text box and click to add button', function(string) {
